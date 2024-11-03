@@ -18,8 +18,8 @@ COMMAND_LIST = (
 )
 
 _PREFIX = (
-    f"Sprawdź proszę, czy w poniższym tekście znajdują się komendy z listy : {', '.join(COMMAND_LIST)} lub ich wyrażenia bliskoznaczne. "
-    "Jeśli tak, odpowiedz krotką Pythona, która zawiera te komendy, np. ('zwiększyć jasność'). Jeśli nie, odpowiedz pustą krotką (). Oto tekst: "
+    f"Sprawdź, czy w poniższym tekście znajdują się komendy z listy : {', '.join(COMMAND_LIST)} lub ich wyrażenia bliskoznaczne. "
+    "Jeśli tak, odpowiedz TYLKO krotką Pythona, która zawiera te komendy, np. ('zwiększyć jasność'). Jeśli nie, odpowiedz pustą krotką (). Oto tekst: "
 )
 
 

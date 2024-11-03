@@ -52,74 +52,74 @@ INCREASING_VOLUME_CASE2 = PATTERN2.format("zwiększ głośność")
 INCREASING_VOLUME_CASE3 = PATTERN3.format("zwiększył głośność")
 INCREASING_VOLUME_CASE4 = PATTERN4.format("zwiększyłbyś głośność")
 
-extractor = CommandsExtractor("qwen2.5:7b")
+extractor = CommandsExtractor("qwen2.5:14b")
 
 
-# @pytest.mark.parametrize(
-#     "input, expected_output",
-#     [
-#         (DECREASING_BRIGHTNESS_CASE1, ("zmniejszyć jasność")),
-#         (DECREASING_BRIGHTNESS_CASE2, ("zmniejszyć jasność")),
-#         (DECREASING_BRIGHTNESS_CASE3, ("zmniejszyć jasność")),
-#         # (DECREASING_BRIGHTNESS_CASE4, ("zmniejszyć jasność")),
-#         (DECREASING_BRIGHTNESS_CASE5, ("przyciemnić ekran")),
-#         (DECREASING_BRIGHTNESS_CASE6, ("przyciemnić ekran")),
-#         (DECREASING_BRIGHTNESS_CASE7, ("przyciemnić ekran")),
-#         # (DECREASING_BRIGHTNESS_CASE8, ("przyciemnić ekran")),
-#         # (DECREASING_BRIGHTNESS_CASE9, ("ściemnić ekran")),
-#         # (DECREASING_BRIGHTNESS_CASE10, ("ściemnić ekran")),
-#         # (DECREASING_BRIGHTNESS_CASE11, ("ściemnić ekran")),
-#         # (DECREASING_BRIGHTNESS_CASE12, ("ściemnić ekran")),
-#         (DECREASING_BRIGHTNESS_CASE13, (()))
-#     ])
-# def test_commands_extractor_on_decreasing_brightness(input, expected_output):
-#     extracted_commands = extractor.get_commands(input)
+@pytest.mark.parametrize(
+    "input, expected_output",
+    [
+        (DECREASING_BRIGHTNESS_CASE1, ("zmniejszyć jasność")),
+        (DECREASING_BRIGHTNESS_CASE2, ("zmniejszyć jasność")),
+        (DECREASING_BRIGHTNESS_CASE3, ("zmniejszyć jasność")),
+        # (DECREASING_BRIGHTNESS_CASE4, ("zmniejszyć jasność")),
+        (DECREASING_BRIGHTNESS_CASE5, ("przyciemnić ekran")),
+        (DECREASING_BRIGHTNESS_CASE6, ("przyciemnić ekran")),
+        (DECREASING_BRIGHTNESS_CASE7, ("przyciemnić ekran")),
+        # (DECREASING_BRIGHTNESS_CASE8, ("przyciemnić ekran")),
+        # (DECREASING_BRIGHTNESS_CASE9, ("ściemnić ekran")),
+        # (DECREASING_BRIGHTNESS_CASE10, ("ściemnić ekran")),
+        # (DECREASING_BRIGHTNESS_CASE11, ("ściemnić ekran")),
+        # (DECREASING_BRIGHTNESS_CASE12, ("ściemnić ekran")),
+        (DECREASING_BRIGHTNESS_CASE13, (()))
+    ])
+def test_commands_extractor_on_decreasing_brightness(input, expected_output):
+    extracted_commands = extractor.get_commands(input)
 
-#     assert expected_output == extracted_commands
-
-
-# @pytest.mark.parametrize(
-#     "input, output",
-#     [
-#         (INCREASING_BRIGHTNESS_CASE1, "zwiększyć jasność"),
-#         (INCREASING_BRIGHTNESS_CASE2, "zwiększyć janość"),
-#         (INCREASING_BRIGHTNESS_CASE3, "zwiększyć jasność"),
-#         # (INCREASING_BRIGHTNESS_CASE4, "zwiększyć jasność"),
-#         (INCREASING_BRIGHTNESS_CASE5, "podnieść jasność"),
-#         (INCREASING_BRIGHTNESS_CASE6, "podnieść jasność"),
-#         (INCREASING_BRIGHTNESS_CASE7, "podnieść jasność"),
-#         # (INCREASING_BRIGHTNESS_CASE8, "podnieść jasność"),
-#     ])
-# def test_commands_extractor_on_increasing_brightness(input, output):
-#     extracted_commands = extractor.get_commands(input)
-
-#     assert output == extracted_commands
+    assert expected_output == extracted_commands
 
 
-# @pytest.mark.parametrize(
-#     "input, output",
-#     [
-#         # (DECREASING_VOLUME_CASE1, "ściszyć głośność"),
-#         # (DECREASING_VOLUME_CASE2, "ściszyć głośność"),
-#         # (DECREASING_VOLUME_CASE3, "ściszyć głośność"),
-#         # (INCREASING_BRIGHTNESS_CASE4, "ściszyć głośność"),
-#         # (DECREASING_VOLUME_CASE5, "przyciszyć głośność"),
-#         # (DECREASING_VOLUME_CASE6, "przyciszyć głośność"),
-#         # (DECREASING_VOLUME_CASE7, "przyciszyć głośność"),
-#         # (INCREASING_BRIGHTNESS_CASE8, "przyciszyć głośność"),
-#         (DECREASING_VOLUME_CASE9, "obniżyć głośność"),
-#         (DECREASING_VOLUME_CASE10, "obniżyć głośność"),
-#         (DECREASING_VOLUME_CASE11, "obniżyć głośność"),
-#         # (INCREASING_BRIGHTNESS_CASE12, "obniżyć głośność"),
-#         (DECREASING_VOLUME_CASE13, "zmniejszyć głośność"),
-#         (DECREASING_VOLUME_CASE14, "zmniejszyć głośność"),
-#         (DECREASING_VOLUME_CASE15, "zmniejszyć głośność"),
-#         # (INCREASING_BRIGHTNESS_CASE16, "zmniejszyć głośność"),
-#     ])
-# def test_commands_extractor_on_decreasing_volume(input, output):
-#     extracted_commands = extractor.get_commands(input)
+@pytest.mark.parametrize(
+    "input, output",
+    [
+        (INCREASING_BRIGHTNESS_CASE1, "zwiększyć jasność"),
+        (INCREASING_BRIGHTNESS_CASE2, "zwiększyć janość"),
+        (INCREASING_BRIGHTNESS_CASE3, "zwiększyć jasność"),
+        # (INCREASING_BRIGHTNESS_CASE4, "zwiększyć jasność"),
+        (INCREASING_BRIGHTNESS_CASE5, "podnieść jasność"),
+        (INCREASING_BRIGHTNESS_CASE6, "podnieść jasność"),
+        (INCREASING_BRIGHTNESS_CASE7, "podnieść jasność"),
+        # (INCREASING_BRIGHTNESS_CASE8, "podnieść jasność"),
+    ])
+def test_commands_extractor_on_increasing_brightness(input, output):
+    extracted_commands = extractor.get_commands(input)
 
-#     assert output == extracted_commands
+    assert output == extracted_commands
+
+
+@pytest.mark.parametrize(
+    "input, output",
+    [
+        # (DECREASING_VOLUME_CASE1, "ściszyć głośność"),
+        # (DECREASING_VOLUME_CASE2, "ściszyć głośność"),
+        # (DECREASING_VOLUME_CASE3, "ściszyć głośność"),
+        # (INCREASING_BRIGHTNESS_CASE4, "ściszyć głośność"),
+        # (DECREASING_VOLUME_CASE5, "przyciszyć głośność"),
+        # (DECREASING_VOLUME_CASE6, "przyciszyć głośność"),
+        # (DECREASING_VOLUME_CASE7, "przyciszyć głośność"),
+        # (INCREASING_BRIGHTNESS_CASE8, "przyciszyć głośność"),
+        (DECREASING_VOLUME_CASE9, "obniżyć głośność"),
+        (DECREASING_VOLUME_CASE10, "obniżyć głośność"),
+        (DECREASING_VOLUME_CASE11, "obniżyć głośność"),
+        # (INCREASING_BRIGHTNESS_CASE12, "obniżyć głośność"),
+        (DECREASING_VOLUME_CASE13, "zmniejszyć głośność"),
+        (DECREASING_VOLUME_CASE14, "zmniejszyć głośność"),
+        (DECREASING_VOLUME_CASE15, "zmniejszyć głośność"),
+        # (INCREASING_BRIGHTNESS_CASE16, "zmniejszyć głośność"),
+    ])
+def test_commands_extractor_on_decreasing_volume(input, output):
+    extracted_commands = extractor.get_commands(input)
+
+    assert output == extracted_commands
 
 
 @pytest.mark.parametrize(
