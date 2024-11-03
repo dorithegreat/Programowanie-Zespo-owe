@@ -2,30 +2,31 @@ from langchain_ollama import OllamaLLM
 from ast import literal_eval
 
 COMMAND_LIST = (
-    "increase volume",
-    "decrease volume",
-    "increase brightness",
-    "decrease brightness",
-    "turn off",
-    "reset",
+    "przyciemnić ekran",
+    "zmniejszyć jasność",
+
+    "zwiększyć jasność",
+    "podnieść jasność"
+
+    "zmniejszyć głośność",
+    "obniżyć głośność",
+
+    "zwiększyć głośność",
+
+    # "wyłączyć komputer",
+    # "zresetować komputer",
 )
 
-PREFIX = (
-    "Below I will send you a request from a person. I want you to "
-    "detect if the person is asking to do something from the following "
-    f"command list: {', '.join(COMMAND_LIST)}. If you detect a command return a "
-    "pythonic tuple, e.g. if the person asks to decrease brightness then reply to "
-    "me ONLY with ('decrese brightness'). If you did not detect any command then "
-    "reply to me ONLY with (). Here is the text on which you should act: "
+_PREFIX = (
+    f"Sprawdź, czy w poniższym tekście znajdują się komendy z listy : {', '.join(COMMAND_LIST)} lub ich wyrażenia bliskoznaczne. "
+    "Jeśli tak, odpowiedz TYLKO krotką Pythona, która zawiera te komendy, np. ('zwiększyć jasność'). Jeśli nie, odpowiedz pustą krotką (). Oto tekst: "
 )
 
 
 class CommandsExtractor:
-    __slots__ = "_model"
-
     def __init__(self, model: str):
         self._model = OllamaLLM(model=model)
 
     def get_commands(self, text: str):
-        commands = self._model.invoke(input=PREFIX + text)
+        commands = self._model.invoke(input=_PREFIX + text)
         return literal_eval(commands)
