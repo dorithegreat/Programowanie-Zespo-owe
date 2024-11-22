@@ -3,15 +3,12 @@ from openai import OpenAI
 from ast import literal_eval
 
 COMMAND_LIST = (
-    # "przyciemnić ekran",
     "zmniejszyć jasność",
     "zwiększyć jasność",
-    # "podnieść jasność"
     "zmniejszyć głośność",
-    # "obniżyć głośność",
     "zwiększyć głośność",
-    # "wyłączyć komputer",
-    # "zresetować komputer",
+    "wyłączyć komputer",
+    "zresetować komputer",
 )
 
 _PREFIX = (
