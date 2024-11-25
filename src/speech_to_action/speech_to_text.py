@@ -21,6 +21,7 @@ class stt:
     TIMEOUT_LENGTH = 1
 
     def __init__(self) -> None:
+        self.model = whisper.load_model("small")
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(format=pyaudio.paInt16,
                 channels=1,
@@ -28,6 +29,8 @@ class stt:
                 input=True,
                 frames_per_buffer=self.CHUNKSIZE)
         self.Threshold = 0.8
+        self.background_noise_level(5)
+        print("Ready")
 
     def rms(self,frame):
         count = len(frame) / self.swidth
@@ -43,8 +46,6 @@ class stt:
         return rms * 1000
     
     def background_noise_level(self,duration):
-        print("Measure voice level for")
-        print("Started recording")
         frames = []
         current = time.time()
         end  = time.time() + duration
@@ -56,7 +57,6 @@ class stt:
         print(self.Threshold)
 
     def startrecord(self,file_path,firstframe):
-        print("Started recording")
         frames = [firstframe]
         current = time.time()
         end  =time.time() + self.TIMEOUT_LENGTH
@@ -69,8 +69,6 @@ class stt:
             current = time.time()
             frames.append(data)
 
-        print("Writting to file")
-
         wf = wave.open(file_path, 'wb')
         wf.setnchannels(1)
         wf.setsampwidth(self.p.get_sample_size(pyaudio.paInt16))
@@ -79,7 +77,6 @@ class stt:
         wf.close
 
     def start(self,file_path):
-        print("Listening")
         while True:
             input = self.stream.read(self.CHUNKSIZE)
             rms_val = self.rms(input)
@@ -90,36 +87,10 @@ class stt:
         self.stream.stop_stream()
         self.stream.close()
         self.p.terminate()
-
-
-
-
-
-
-# p = pyaudio.PyAudio()
-# stream = p.open(format=pyaudio.paInt16,
-#                 channels=1,
-#                 rate=RATE,
-#                 input=True,
-#                 frames_per_buffer=CHUNKSIZE)
-
-trans = ""
-sttinstance = stt()
-model = whisper.load_model("small")
-print("Started")
-sttinstance.background_noise_level(5)
-time.sleep(2)
-try:
-    while True:
+    def listen(self):
         temp_file = "temp.wav"
-        sttinstance.start(temp_file)
-        result = model.transcribe(temp_file,language="pl")
-        print(result['text']+"\n")
-        trans += result['text'] + " "
+        self.start(temp_file)
+        result = self.model.transcribe(temp_file,language="pl")
         os.remove(temp_file)
-except KeyboardInterrupt:
-    print("Stop")
-finally:
-    print("LOG: "+trans)
-    sttinstance.end()
-
+        return result['text']+"\n"
+    
