@@ -1,13 +1,14 @@
 import argparse
 import cv2
 import mediapipe as mp
+import numpy as np
+import tensorflow as tf
 
-# Konfiguracja MediaPipe
+
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 
 
-# Funkcja do uzyskiwania argumentów
 def get_args():
     parser = argparse.ArgumentParser()
 
@@ -21,23 +22,40 @@ def get_args():
                         default=0.7)
     parser.add_argument("--min_tracking_confidence",
                         help='min_tracking_confidence',
-                        type=float,  # Changed to float for consistency
+                        type=float,
                         default=0.5)
     args = parser.parse_args()
 
     return args
 
 
-# Główna funkcja
+def load_model_and_labels(model_path, label_path):
+    model = tf.keras.models.load_model(model_path)
+    labels = np.load(label_path, allow_pickle=True)
+    return model, labels
+
+
+def prepare_input_data(hand_landmarks):
+    lm_list = []
+    for lm in hand_landmarks:
+        lm_list.append(lm.x)
+        lm_list.append(lm.y)
+        lm_list.append(lm.z)
+
+    return lm_list
+
+
 def main():
     args = get_args()
 
-    # Ustawienia kamery
+    model_path = "gesture_recognition_model.keras"
+    label_path = "label_encoder_classes.npy"
+    model, labels = load_model_and_labels(model_path, label_path)
+
     cap = cv2.VideoCapture(args.device)
     cap.set(3, args.width)
     cap.set(4, args.height)
 
-    # Inicjalizacja detektora dłoni MediaPipe
     with mp_hands.Hands(
             static_image_mode=args.use_static_image_mode,
             max_num_hands=2,
@@ -51,33 +69,28 @@ def main():
                 print("Failed to grab frame.")
                 break
 
-            # Odbicie obrazu w poziomie
             img = cv2.flip(img, 1)
 
-            # Konwersja obrazu do RGB dla MediaPipe
             img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             results = hands.process(img_rgb)
 
-            # Przetwarzanie wyników i wyświetlanie punktów orientacyjnych
             if results.multi_hand_landmarks:
-                for hand_landmarks in results.multi_hand_landmarks:
-                    # Rysowanie punktów orientacyjnych na obrazie
-                    mp_drawing.draw_landmarks(img, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+                lm_list = prepare_input_data(results.multi_hand_landmarks[0].landmark)
 
-                    # Uzyskiwanie i wyświetlanie współrzędnych punktów orientacyjnych
-                    lm_list = []
-                    for id, lm in enumerate(hand_landmarks.landmark):
-                        h, w, _ = img.shape
-                        cx, cy = int(lm.x * w), int(lm.y * h)
-                        lm_list.append((cx, cy))
-                        cv2.circle(img, (cx, cy), 5, (0, 255, 0), cv2.FILLED)
+                input_data = np.array(lm_list, dtype=np.float32).reshape(1, -1)
 
-                    print("Landmark points:", lm_list)
+                input_data[:, ::3] /= args.width
+                input_data[:, 1::3] /= args.height
 
-            # Wyświetlanie obrazu z naniesionymi punktami orientacyjnymi
-            cv2.imshow('Image', img)
+                prediction = model.predict(input_data)
+                predicted_label = labels[np.argmax(prediction)]
+
+                cv2.putText(img, f"Gesture: {predicted_label}",
+                            (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+
+            cv2.imshow('Gesture Recognition', img)
             key = cv2.waitKey(1)
-            if key == 27:  # Wyjście po naciśnięciu ESC
+            if key == 27:  # ESC to quit
                 break
 
     cap.release()
