@@ -1,0 +1,16 @@
+two_fingers_up - dwa palce w górę (wskazujący i środkowy) przodem do kamery, palce złączone. Mało zdjęć i może się mylić z index_middle, więc prawdopodobnie możemy usunąć ten gest jeżeli sprawia problemy
+thumb_up - kciuk w górę
+palm_up - dłoń przodem do kamery, wszystkie palce do góry, palce razem
+five - tak samo jak palm_up ale wszystkie palce są osobno (liczba 5)
+stop - nie użyłam w danych do trenowania bo wymaga dwóch rąk naraz ale mam w bazie zdjęć
+index_middle - palce środkowy i wskazujący do góry, rozdzielone (jeden ze sposobów pokazania liczby 2)
+three - kciuk, wskazujący i środkowy wyprostowane, pozostałe dwa zgięte, przodem do kamery (liczba 3)
+index_up - palec wskazujący pokazuje do góry, reszta palców zgięta
+four - wszystkie palce wyprostowane poza kciukiem (liczba 4)
+span - kciuk i mały palec wyprostowane, reszta zgięta. Proponuję użyć ten gest jako prawy przycisk myszy
+fist - wszystkie palce zaciśnięte w pięść. Planowałyśmy go użyć jako lewy przycisk myszy
+index_middle_ring - środkowe trzy palce wyprostowane (przeciwieństwo span). Nie wiem czy nam się do czegoś przyda ale miałam tego dużo w zestawach danych
+okay - znak okej (kciuk i wskazujący złożone w kółko). Zdjęcia które mam w tej kategorii są bardzo różne i dziwne więc nie wiem jak sobie model będzie z nimi radził
+palm_sideways - tak jak palm_up ale dłoń jest poziomo. Na niektórych zdjęciach jest przodem a na niektórych tyłem. Tutaj mam najwięcej zdjęć lewych rąk
+thumb_down - kciuk w dół. Mam BARDZO dużo zdjęć w tej kategorii ale w danych do modelu jest ich chyba mniej więcej tyle samo co innych
+other - inne. Ostatecznie nie wrzuciłam ich do pliku z danymi. Mogę dodać tam trochę jeżeli to ułatwi uczenie
