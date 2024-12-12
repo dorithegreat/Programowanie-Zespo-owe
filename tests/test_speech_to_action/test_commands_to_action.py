@@ -1,8 +1,7 @@
 import pytest
 from unittest.mock import Mock, patch
+from src.speech_to_action.commands_to_action import commands_to_action, SpeechCommands as SC
 
-from src.speech_to_action.commands_to_action import commands_to_action
-from src.speech_to_action.common import SpeechCommands as SC
 
 MODULE = "src.speech_to_action.commands_to_action"
 
