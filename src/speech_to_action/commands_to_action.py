@@ -39,11 +39,8 @@ _COMMAND_TO_ACTION_MAPPER: dict[str, Callable] = {
 def commands_to_action(commands: list):
     for command in commands:
         if command.count(" ") >= 1:
-            print(command)
             cmd = SpeechCommands(command.split(" ")[0])
-            print(cmd)
             arg = " ".join(command.split(" ")[1:])
-            print(arg)
             _COMMAND_TO_ACTION_MAPPER[cmd](arg)
         else:
             _COMMAND_TO_ACTION_MAPPER[SpeechCommands(command)]()
