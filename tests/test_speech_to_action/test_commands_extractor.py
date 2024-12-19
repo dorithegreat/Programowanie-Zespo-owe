@@ -1,5 +1,5 @@
 import pytest
-from src.speech_to_action.common import SpeechCommands as SC
+from src.speech_to_action.commands_to_action import SpeechCommands as SC
 from src.speech_to_action.commands_extractor import OpenAICommandsExtractor
 
 PATTERN1 = "Lorem ipsum. Czy możesz {}? Lorem ipsum."
@@ -51,6 +51,9 @@ CASES_WITH_ARGUMENTS = {
         ("uruchomić firefox", "uruchom steam", "uruchomił libreoffice", "uruchomiłbyś visual studio code"),
     
     ],
+    "zamknąć": [
+        ("zamknąć firefox", "zamknij steam", "zamknął libreoffice", "zamknąłbyś visual studio code"),
+    ],
     "wyszukać": [
         ("wyszukać czy śliwki są zielone", "wyszukaj Polska", "wyszukał najmniejszą liczbę pierwszą", "wyszukałbyś pogodę w Lesznie"),
     ]
@@ -86,7 +89,8 @@ def get_cases_with_arguments(type: SC):
     cases = CASES_WITH_ARGUMENTS[type.value]
 
     return [
-        (PATTERNS[k].format(j), [type.value + " " + " ".join(j.split(" ")[1:])]) for i in cases for k, j in enumerate(i)
+        (PATTERNS[k].format(j), [type.value + " " + " ".join(j.split(" ")[1:])]) 
+        for i in cases for k, j in enumerate(i)
     ]
 
 
@@ -178,6 +182,16 @@ def test_commands_extractor_on_multiple_questions(input, expected_output):
     get_cases_with_arguments(SC.OPEN_PROGRAM)
 )
 def test_commands_extractor_on_opening_program(input, expected_output):
+    extracted_commands = extractor.get_commands(input)
+
+    assert expected_output == extracted_commands
+
+
+@pytest.mark.parametrize(
+    "input, expected_output",
+    get_cases_with_arguments(SC.CLOSE_PROGRAM)
+)
+def test_commands_extractor_on_closing_program(input, expected_output):
     extracted_commands = extractor.get_commands(input)
 
     assert expected_output == extracted_commands
