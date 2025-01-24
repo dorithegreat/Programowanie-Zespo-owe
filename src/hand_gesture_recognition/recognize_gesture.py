@@ -52,6 +52,8 @@ def main():
     label_path = "label_encoder_classes.npy"
     model, labels = load_model_and_labels(model_path, label_path)
 
+    confidence_threshold = 0.7  # Próg pewności
+
     cap = cv2.VideoCapture(args.device)
     cap.set(3, args.width)
     cap.set(4, args.height)
@@ -83,10 +85,16 @@ def main():
                 input_data[:, 1::3] /= args.height
 
                 prediction = model.predict(input_data)
+                predicted_confidence = np.max(prediction)
                 predicted_label = labels[np.argmax(prediction)]
 
-                cv2.putText(img, f"Gesture: {predicted_label}",
-                            (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+                for i, label in enumerate(labels):
+                    print(f"Gest: {label}, Prawdopodobieństwo: {prediction[0][i]:.2f}")
+
+
+                if predicted_confidence >= confidence_threshold:
+                    cv2.putText(img, f"Gesture: {predicted_label} ({predicted_confidence:.2f})",
+                                (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
 
             cv2.imshow('Gesture Recognition', img)
             key = cv2.waitKey(1)
@@ -95,6 +103,7 @@ def main():
 
     cap.release()
     cv2.destroyAllWindows()
+
 
 
 if __name__ == '__main__':
