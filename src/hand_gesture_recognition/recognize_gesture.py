@@ -4,6 +4,7 @@ import mediapipe as mp
 import numpy as np
 import tensorflow as tf
 
+from gesture_processor import GestureProcessor
 
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
@@ -47,6 +48,8 @@ def prepare_input_data(hand_landmarks):
 
 def main():
     args = get_args()
+    
+    gesture_processor = GestureProcessor()
 
     model_path = "gesture_recognition_model.keras"
     label_path = "label_encoder_classes.npy"
@@ -93,8 +96,9 @@ def main():
 
 
                 if predicted_confidence >= confidence_threshold:
-                    cv2.putText(img, f"Gesture: {predicted_label} ({predicted_confidence:.2f})",
-                                (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+                    # cv2.putText(img, f"Gesture: {predicted_label} ({predicted_confidence:.2f})",
+                    #             (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+                    gesture_processor.process(predicted_label, results)
 
             cv2.imshow('Gesture Recognition', img)
             key = cv2.waitKey(1)
