@@ -15,16 +15,36 @@ class stt:
     RATE = 16000
     swidth = 2
 
-    TIMEOUT_LENGTH = 1
+    TIMEOUT_LENGTH = 2
+
+    arbitrary_names_to_prog_names = {}
+    prompt_prog_name = ""
+
+
+    def getProgNames(self):
+        progNames = set()
+        folderlist = os.getenv('PATH').split(':')
+        for i in folderlist:
+            for j in os.listdir(i):
+                if os.access(i+"/"+j,os.X_OK):
+                    progNames.add(j.replace("-","").replace(".",""))
+                    self.arbitrary_names_to_prog_names[j.replace("-","").replace(".","")] = j
+        res = "Glossary: "
+        for i in progNames:
+            res += i
+            res += ", "
+        self.prompt_prog_name = res[:-2]
+        return
 
     def __init__(self) -> None:
-        self.model = whisper.load_model("small")
+        self.model = whisper.load_model("./whisper-finetuned-epoch.pt")
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(format=pyaudio.paInt16,
                 channels=1,
                 rate=self.RATE,
                 input=True,
                 frames_per_buffer=self.CHUNKSIZE)
+        self.getProgNames()
         self.Threshold = 0.8
         self.background_noise_level(5)
         print("Ready")
@@ -78,6 +98,7 @@ class stt:
             input = self.stream.read(self.CHUNKSIZE)
             rms_val = self.rms(input)
             if rms_val > self.Threshold:
+                print("started")
                 self.startrecord(file_path,input)
                 break
 
@@ -86,9 +107,12 @@ class stt:
         self.stream.close()
         self.p.terminate()
         
-    def listen(self):
+    def listen(self,use_prog_names: bool):
         temp_file = "temp.wav"
         self.start(temp_file)
-        result = self.model.transcribe(temp_file,language="pl")
+        if use_prog_names:
+            result = self.model.transcribe(temp_file,language="pl",initial_prompt = self.prompt_prog_name)
+        else:
+            result = self.model.transcribe(temp_file,language="pl")
         os.remove(temp_file)
         return result['text']+"\n"
