@@ -1,5 +1,10 @@
 pytest==8.3.3
-black==24.10.0
+ruff==0.7.2
 langchain==0.3.4
 langchain-ollama==0.2.0
 ollama==0.3.3
+opencv-python~=4.10.0.84
+mediapipe~=0.10.15
+openai==1.53.0
+screen-brightness-control==0.24.1
+pyalsaaudio==0.11.0

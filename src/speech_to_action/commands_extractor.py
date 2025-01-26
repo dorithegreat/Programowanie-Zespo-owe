@@ -1,7 +1,7 @@
 from langchain_ollama import OllamaLLM
 from openai import OpenAI
 from ast import literal_eval
-from src.speech_to_action.common import SpeechCommands, SpeechArgumentCommands
+from src.speech_to_action.commands_to_action import SpeechCommands, SpeechArgumentCommands
 
 COMMANDS = [cmd.value for cmd in SpeechCommands]
 ARGUMENT_COMMANDS = [cmd.value for cmd in SpeechArgumentCommands]

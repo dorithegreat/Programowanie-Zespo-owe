@@ -7,9 +7,6 @@ import time
 import os
 
 
-
-
-
 class stt:
     SHORT_NORMALIZE = (1.0/32768.0)
     CHUNKSIZE = 1024
@@ -53,7 +50,7 @@ class stt:
             data = self.stream.read(self.CHUNKSIZE)
             frames.append(self.rms(data))
             current = time.time()
-        self.Threshold = 0.7 + sum(frames) / len(frames)
+        self.Threshold = 3.0 + sum(frames) / len(frames)
         print(self.Threshold)
 
     def startrecord(self,file_path,firstframe):
@@ -83,14 +80,15 @@ class stt:
             if rms_val > self.Threshold:
                 self.startrecord(file_path,input)
                 break
+
     def end(self):
         self.stream.stop_stream()
         self.stream.close()
         self.p.terminate()
+        
     def listen(self):
         temp_file = "temp.wav"
         self.start(temp_file)
         result = self.model.transcribe(temp_file,language="pl")
         os.remove(temp_file)
         return result['text']+"\n"
-    
