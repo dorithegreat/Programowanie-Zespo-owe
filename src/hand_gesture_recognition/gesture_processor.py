@@ -11,23 +11,27 @@ class GestureProcessor:
     #class fields
     state = 0
 
-    #basically a finite automaton
-    #jftt coming in handy
-    state_change_table = None
-    prev_position = None
+
 
     def __init__(self):
-        pass
+        self.prev_position = None
 
     #for now I expect positions to be of type HandLandmarkerResults
     #I intend to eventually change it to something more friendly because fuck the mediapipe documentation
     def process(self, gesture, positions):
-        pass
+        if gesture == "palm_up":
+            self.move_cursor(positions)
+        elif gesture == "fist":
+            self.left_click(positions)
+        elif gesture == "span":
+            self.right_click(positions)
+        elif gesture == "palm_sideways":
+            self.scroll(positions)
 
 
     def move_cursor(self, positions):
         #extract wrist data from landmarks
-        landmarks = positions.hand_landmarks
+        landmarks = positions.multi_hand_landmarks
         wrist_landmark = landmarks[0][0]
         
 
@@ -40,13 +44,19 @@ class GestureProcessor:
         #send(x_change, y_change)
 
     def left_click(self, positions):
+        if self.state == States.left_click:
+            # don't click again
+            pass
+        
         #extract wrist data as above
 
         #send(left_click)
         
         #determine if hand is moving and process movement like above
-
+        
+    def right_click(self, positions):
         pass
+
 
     def scroll(self, positions):
         landmarks = positions.hand_landmarks
