@@ -37,7 +37,7 @@ class stt:
         return
 
     def __init__(self) -> None:
-        self.model = whisper.load_model("./whisper-finetuned-epoch.pt")
+        self.model = whisper.load_model("./model/whisper-finetuned-epoch.pt")
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(format=pyaudio.paInt16,
                 channels=1,
