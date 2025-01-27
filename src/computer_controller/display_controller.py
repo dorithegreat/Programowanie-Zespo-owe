@@ -1,5 +1,5 @@
 import subprocess as sp
-from computer_controller.log import get_logger  # Replace 'your_logger_module' with the actual module name
+from src.computer_controller.log import get_logger  # Replace 'your_logger_module' with the actual module name
 
 
 class DisplayController:

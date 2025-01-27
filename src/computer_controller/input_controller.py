@@ -1,8 +1,10 @@
 from pynput.mouse import Controller as MouseController, Button
 from pynput.keyboard import Controller as KeyboardController
-from computer_controller.log import get_logger
+from src.computer_controller.log import get_logger
 from typing import Tuple
 import time
+#import tkinter as tk
+
 
 
 class InputController:
@@ -32,6 +34,15 @@ class InputController:
         :param x: The x-coordinate of the target position.
         :param y: The y-coordinate of the target position.
         """
+
+        #root = tk.Tk()
+        #width = root.winfo_screenwidth()  # Szerokość ekranu
+        #height = root.winfo_screenheight()  # Wysokość ekranu
+
+        #print(f"Szerokość ekranu: {width}, Wysokość ekranu: {height}")
+        #x = min(max(x, 0), width)
+        #y = min(max(y, 0), height)
+
         self.mouse.position = (x, y)
         self.logger.info(f"Moved cursor to ({x}, {y})")
 
@@ -53,7 +64,7 @@ class InputController:
             # Bézier curve formula
             x = (1 - t) ** 3 * start[0] + 3 * (1 - t) ** 2 * t * control1[0] + 3 * (1 - t) * t ** 2 * control2[0] + t ** 3 * end[0]
             y = (1 - t) ** 3 * start[1] + 3 * (1 - t) ** 2 * t * control1[1] + 3 * (1 - t) * t ** 2 * control2[1] + t ** 3 * end[1]
-            self.mouse.position = (int(x), int(y))
+            self.move_cursor_to(int(x), int(y))
             time.sleep(duration / steps)
 
         self.logger.info(f"Moved cursor gradually from {start} to {end} in {duration} seconds")
@@ -108,9 +119,8 @@ if __name__ == "__main__":
     input_controller.move_cursor_gradually((500, 500), (1000, 1000), duration=0.75)
 
     # Simulate typing text
-    input_controller.write_text("Hello, World!", delay=0.01)
+    #input_controller.write_text("Hello, World!", delay=0.1)
 
     # Get the cursor position again
     new_position = input_controller.get_cursor_position()
     print(f"Cursor is now at: {new_position}")
-    

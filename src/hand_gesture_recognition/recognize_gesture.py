@@ -3,11 +3,18 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import tensorflow as tf
+import os
 
-<<<<<<< HEAD
-=======
-from gesture_processor import GestureProcessor
->>>>>>> main
+from src.hand_gesture_recognition.gesture_processor import GestureProcessor
+
+
+class HandLandmarkerResults:
+    def __init__(self, multi_hand_landmarks, width, height):
+        self.multi_hand_landmarks = multi_hand_landmarks
+        self.width = width
+        self.height = height
+
+
 
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
@@ -51,14 +58,15 @@ def prepare_input_data(hand_landmarks):
 
 def main():
     args = get_args()
-<<<<<<< HEAD
-=======
-    
-    gesture_processor = GestureProcessor()
->>>>>>> main
 
-    model_path = "gesture_recognition_model.keras"
-    label_path = "label_encoder_classes.npy"
+    gesture_processor = GestureProcessor()
+
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    model_dir = os.path.join(script_dir, '..', 'hand_gesture_recognition')
+    model_path = os.path.join(model_dir, 'gesture_recognition_model.keras')
+
+    label_path = os.path.join(model_dir, 'label_encoder_classes.npy')
     model, labels = load_model_and_labels(model_path, label_path)
 
     confidence_threshold = 0.7  # Próg pewności
@@ -97,19 +105,12 @@ def main():
                 predicted_confidence = np.max(prediction)
                 predicted_label = labels[np.argmax(prediction)]
 
-                for i, label in enumerate(labels):
-                    print(f"Gest: {label}, Prawdopodobieństwo: {prediction[0][i]:.2f}")
-
-
                 if predicted_confidence >= confidence_threshold:
-<<<<<<< HEAD
-                    cv2.putText(img, f"Gesture: {predicted_label} ({predicted_confidence:.2f})",
-                                (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
-=======
-                    # cv2.putText(img, f"Gesture: {predicted_label} ({predicted_confidence:.2f})",
-                    #             (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
-                    gesture_processor.process(predicted_label, results)
->>>>>>> main
+                    # Tworzymy obiekt HandLandmarkerResults z odpowiednimi danymi
+                    positions = HandLandmarkerResults(results.multi_hand_landmarks, args.width, args.height)
+
+                    gesture_processor.process(predicted_label, positions)
+
 
             cv2.imshow('Gesture Recognition', img)
             key = cv2.waitKey(1)

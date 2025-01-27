@@ -70,6 +70,3 @@ def train_model():
 
     model.save("gesture_recognition_model.keras")
     print("Model zapisany jako 'gesture_recognition_model.keras'.")
-
-if __name__ == "__main__":
-    train_model()

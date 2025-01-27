@@ -4,7 +4,7 @@ import os
 import platform
 import psutil as ps
 import shutil as sh
-from computer_controller.log import get_logger
+from src.computer_controller.log import get_logger
 
 
 logger = get_logger(__name__)
@@ -67,6 +67,78 @@ def open_program(app_name: str, args: list[str] = None):
         logger.error(f"Failed to open '{app_name}': {e}")
         return False
 
+
+def shut_program(app_name: str):
+    """
+    Shut down a running program by its name.
+
+    :param app_name: The name of the program to shut down.
+    :return: True if the program was shut down successfully, False otherwise.
+    """
+    if not is_running(app_name):
+        logger.info(f"Program '{app_name}' is not running.")
+        return True
+
+    try:
+        for process in ps.process_iter(['pid', 'name']):
+            if process.info['name'] and app_name in process.info['name'].lower():
+                pid = process.info['pid']
+                process = ps.Process(pid)
+                process.terminate()  # Try to terminate gracefully
+                process.wait(timeout=5)  # Wait for the process to terminate
+                logger.info(f"Successfully shut down '{app_name}' (PID: {pid}).")
+                return True
+        logger.warning(f"Program '{app_name}' not found in running processes.")
+        return False
+    except Exception as e:
+        logger.error(f"Failed to shut down '{app_name}': {e}")
+        return False
+
+
+def shutdown_computer():
+    """
+    Shut down the computer.
+
+    :return: True if the shutdown command was executed successfully, False otherwise.
+    """
+    try:
+        platform_name = get_platform()
+        if platform_name == "Windows":
+            sp.run(["shutdown", "/s", "/t", "0"], check=True)
+        elif platform_name == "Linux" or platform_name == "Darwin":  # Darwin is macOS
+            sp.run(["shutdown", "-h", "now"], check=True)
+        else:
+            logger.error(f"Unsupported platform: {platform_name}")
+            return False
+
+        logger.info("Computer is shutting down.")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to shut down the computer: {e}")
+        return False
+
+
+def reboot_computer():
+    """
+    Reboot the computer.
+
+    :return: True if the reboot command was executed successfully, False otherwise.
+    """
+    try:
+        platform_name = get_platform()
+        if platform_name == "Windows":
+            sp.run(["shutdown", "/r", "/t", "0"], check=True)
+        elif platform_name == "Linux" or platform_name == "Darwin":  # Darwin is macOS
+            sp.run(["reboot"], check=True)
+        else:
+            logger.error(f"Unsupported platform: {platform_name}")
+            return False
+
+        logger.info("Computer is rebooting.")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to reboot the computer: {e}")
+        return False
 
 '''FIREFOX'''
 

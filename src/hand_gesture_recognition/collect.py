@@ -64,6 +64,3 @@ def collect_data():
 
     if data:
         save_gesture_data(gesture_name, np.array(data))
-
-if __name__ == "__main__":
-    collect_data()
