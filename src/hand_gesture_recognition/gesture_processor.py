@@ -1,5 +1,5 @@
 from enum import Enum
-
+import tkinter as tk
 
 from src.computer_controller.input_controller import InputController
 
@@ -49,30 +49,29 @@ class GestureProcessor:
         # y_change = self.prev_position.y - wrist_landmark.y
         #z coord is irrelevant for this
 
-        screen_x = wrist_landmark.x * positions.width * 2.5
-        screen_y = wrist_landmark.y * positions.height * 2.5
+        # screen_x = wrist_landmark.x * positions.width * 2.5
+        # screen_y = wrist_landmark.y * positions.height * 2.5
+        
+        root = tk.Tk()
+        width = root.winfo_screenwidth()
+        height = root.winfo_screenheight()
+        
+        screen_x = wrist_landmark.x * width
+        screen_y = wrist_landmark.y * height
 
         self.input_controller.move_cursor_to(screen_x, screen_y)
         # print(self.input_controller.get_cursor_position())
 
     def left_click(self, positions):
-        # print("clicking")
 
 
-        # self.move_cursor(positions)
-        
-        if self.state == States.left_click:
-            # don't click again
-            self.input_controller.click(True)
+        self.input_controller.click(True)
         
         
         
     def right_click(self, positions):
-        self.move_cursor(positions)
-        
-        if self.state == States.left_click:
-            # don't click again
-            self.input_controller.click(False)
+
+        self.input_controller.click(False)
 
 
     def scroll(self, positions):
