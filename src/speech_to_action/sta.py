@@ -1,6 +1,6 @@
-from speech_to_text import stt
-from commands_extractor import OpenAICommandsExtractor
-from commands_to_action import commands_to_action
+from src.speech_to_action.speech_to_text import stt
+from src.speech_to_action.commands_extractor import OpenAICommandsExtractor
+from src.speech_to_action.commands_to_action import commands_to_action
 
 
 if __name__ == "__main__":
