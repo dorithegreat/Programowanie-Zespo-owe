@@ -1,6 +1,7 @@
 import subprocess
 import screen_brightness_control as sbc
 import alsaaudio
+import os
 
 
 BRIGHTNESS_CHANGE = 15
@@ -48,20 +49,25 @@ def _change_volume(value):
 
 
 def shutdown_pc():
-    pass
+    os.system("sudo shutdown now")
 
 
 def reboot_pc():
-    pass
+    os.system("sudo reboot now")
 
 
 def open_program(name: str):
-    pass
+    name = name.split(" ")
+    try:
+        p = subprocess.Popen(name)
+    except Exception:
+        return
+    return
 
 
 @handle_errors
 def close_program(name: str):
-    subprocess.run(["pkill", name])
+    subprocess.run(["pkill","-f", name])
 
 
 @handle_errors

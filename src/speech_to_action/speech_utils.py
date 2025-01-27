@@ -39,7 +39,6 @@ def get_exact_prog_name(name: str):
         res = "default"
         val = sys.maxsize
         for i in buildinprognames:
-            print(i)
             temp = LCS(name,i.name.lower())
             if temp < val:
                 val = temp
