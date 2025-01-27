@@ -33,7 +33,7 @@ class GestureProcessor:
             self.left_click(positions)
         elif gesture == "span":
             self.right_click(positions)
-        elif gesture == "palm_sideways":
+        elif gesture == "thumb_up":
             self.scroll(positions)
 
 
@@ -75,15 +75,13 @@ class GestureProcessor:
 
 
     def scroll(self, positions):
-        pass
-        # landmarks = positions.hand_landmarks
-        # wrist_landmark = landmarks[0][0]
+        landmarks = positions.multi_hand_landmarks[0].landmark
+        wrist_landmark = landmarks
+        # print(wrist_landmark)
 
-        # I cannot find where in Michał's code is scrolling located, if anywhere
-
-        #determine if the movement is more horizontal or vertical, scroll accordingly
-        # x_change = self.prev_postition.x -  wrist_landmark.x
         # y_change = self.prev_position.y - wrist_landmark.y
+
+        self.input_controller.scroll_up()
 
         
 
