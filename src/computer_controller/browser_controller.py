@@ -8,8 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from webdriver_manager.firefox import GeckoDriverManager
 from spotipy.oauth2 import SpotifyOAuth
-from computer_controller.utils import ff_get_profile_path, is_installed
-from computer_controller.log import get_logger
+from src.computer_controller.utils import ff_get_profile_path, is_installed
+from src.computer_controller.log import get_logger
 from googleapiclient.discovery import build
 from dotenv import load_dotenv
 import spotipy as sp

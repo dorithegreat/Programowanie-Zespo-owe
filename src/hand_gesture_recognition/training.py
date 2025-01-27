@@ -74,7 +74,3 @@ def main():
 
     model.save("gesture_recognition_model.keras")
     np.save("label_encoder_classes.npy", label_encoder.classes_)
-
-
-if __name__ == "__main__":
-    main()
