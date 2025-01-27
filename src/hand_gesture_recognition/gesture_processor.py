@@ -24,6 +24,8 @@ class GestureProcessor:
 
     def process(self, gesture, positions):
         gesture = gesture.strip()
+        
+        print(gesture)
 
         if gesture == "palm_up":
             self.move_cursor(positions)
@@ -47,14 +49,17 @@ class GestureProcessor:
         # y_change = self.prev_position.y - wrist_landmark.y
         #z coord is irrelevant for this
 
-        screen_x = wrist_landmark.x * positions.width
-        screen_y = wrist_landmark.y * positions.height
+        screen_x = wrist_landmark.x * positions.width * 2.5
+        screen_y = wrist_landmark.y * positions.height * 2.5
 
         self.input_controller.move_cursor_to(screen_x, screen_y)
+        # print(self.input_controller.get_cursor_position())
 
     def left_click(self, positions):
+        # print("clicking")
 
-        self.move_cursor(positions)
+
+        # self.move_cursor(positions)
         
         if self.state == States.left_click:
             # don't click again
@@ -71,8 +76,9 @@ class GestureProcessor:
 
 
     def scroll(self, positions):
-        landmarks = positions.hand_landmarks
-        wrist_landmark = landmarks[0][0]
+        pass
+        # landmarks = positions.hand_landmarks
+        # wrist_landmark = landmarks[0][0]
 
         # I cannot find where in Michał's code is scrolling located, if anywhere
 
