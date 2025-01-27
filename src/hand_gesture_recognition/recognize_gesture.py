@@ -15,6 +15,7 @@ class HandLandmarkerResults:
         self.height = height
 
 
+
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 
@@ -59,6 +60,7 @@ def main():
     args = get_args()
 
     gesture_processor = GestureProcessor()
+
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     model_dir = os.path.join(script_dir, '..', 'hand_gesture_recognition')
@@ -108,6 +110,7 @@ def main():
                     positions = HandLandmarkerResults(results.multi_hand_landmarks, args.width, args.height)
 
                     gesture_processor.process(predicted_label, positions)
+
 
             cv2.imshow('Gesture Recognition', img)
             key = cv2.waitKey(1)

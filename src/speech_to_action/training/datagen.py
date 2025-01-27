@@ -1,11 +1,12 @@
-import whisper
 import pyaudio
 import math
 import struct
 import wave
 import time
 import os
+from pydub import AudioSegment
 
+voice_dir = "test2/"
 
 class stt:
     SHORT_NORMALIZE = (1.0/32768.0)
@@ -17,37 +18,14 @@ class stt:
 
     TIMEOUT_LENGTH = 2
 
-    arbitrary_names_to_prog_names = {}
-    prompt_prog_name = ""
-
-
-    def getProgNames(self):
-        progNames = set()
-        folderlist = os.getenv('PATH').split(':')
-        for i in folderlist:
-            for j in os.listdir(i):
-                if os.access(i+"/"+j,os.X_OK):
-                    progNames.add(j.replace("-","").replace(".",""))
-                    self.arbitrary_names_to_prog_names[j.replace("-","").replace(".","")] = j
-        res = "Glossary: "
-        for i in progNames:
-            res += i
-            res += ", "
-        self.prompt_prog_name = res[:-2]
-        return
-
     def __init__(self) -> None:
-        self.model = whisper.load_model("./model/whisper-finetuned-epoch.pt")
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(format=pyaudio.paInt16,
                 channels=1,
                 rate=self.RATE,
                 input=True,
                 frames_per_buffer=self.CHUNKSIZE)
-        self.getProgNames()
         self.Threshold = 0.8
-        self.background_noise_level(5)
-        print("Ready")
 
     def rms(self,frame):
         count = len(frame) / self.swidth
@@ -63,6 +41,8 @@ class stt:
         return rms * 1000
     
     def background_noise_level(self,duration):
+        print("Measure voice level for")
+        print("Started recording")
         frames = []
         current = time.time()
         end  = time.time() + duration
@@ -70,10 +50,11 @@ class stt:
             data = self.stream.read(self.CHUNKSIZE)
             frames.append(self.rms(data))
             current = time.time()
-        self.Threshold = 3.0 + sum(frames) / len(frames)
+        self.Threshold = 2.0 + sum(frames) / len(frames)
         print(self.Threshold)
 
     def startrecord(self,file_path,firstframe):
+        print("Started recording")
         frames = [firstframe]
         current = time.time()
         end  =time.time() + self.TIMEOUT_LENGTH
@@ -86,6 +67,8 @@ class stt:
             current = time.time()
             frames.append(data)
 
+        print("Writting to file")
+
         wf = wave.open(file_path, 'wb')
         wf.setnchannels(1)
         wf.setsampwidth(self.p.get_sample_size(pyaudio.paInt16))
@@ -93,26 +76,49 @@ class stt:
         wf.writeframes(b''.join(frames))
         wf.close
 
+        sound = AudioSegment.from_wav(file_path)
+        sound.export(file_path+".mp3", format='mp3')
+
+        os.remove(file_path)
+
     def start(self,file_path):
+        print("Listening")
         while True:
             input = self.stream.read(self.CHUNKSIZE)
             rms_val = self.rms(input)
             if rms_val > self.Threshold:
-                print("started")
                 self.startrecord(file_path,input)
                 break
-
     def end(self):
         self.stream.stop_stream()
         self.stream.close()
         self.p.terminate()
-        
-    def listen(self,use_prog_names: bool):
-        temp_file = "temp.wav"
-        self.start(temp_file)
-        if use_prog_names:
-            result = self.model.transcribe(temp_file,language="pl",initial_prompt = self.prompt_prog_name)
-        else:
-            result = self.model.transcribe(temp_file,language="pl")
-        os.remove(temp_file)
-        return result['text']+"\n"
+
+def genfile(i):
+    res = "0000" + str(i)
+    res = res[len(res) - 4:]
+    return voice_dir+res+"test"
+def main2():
+    i = 1 + len(os.listdir(voice_dir))
+    print(i)
+    sttinstance = stt()
+    print("Started")
+    sttinstance.background_noise_level(5)
+    time.sleep(2)
+    try:
+        while True:
+            s = genfile(i)
+            temp_file = s
+            sttinstance.start(temp_file)
+            text = input("Wpisz tekst: ")
+            f = open(voice_dir+"metadata.csv","a")
+            f.write(s.split("/")[1]+".mp3,"+text+"\n")
+            f.close()
+            print(s)
+            i += 1
+    except KeyboardInterrupt:
+        print("Stop")
+    finally:
+        sttinstance.end()
+
+main2()

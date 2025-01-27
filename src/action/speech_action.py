@@ -1,8 +1,10 @@
 import subprocess
+
 from src.computer_controller.browser_controller import BrowserController
 from src.computer_controller.display_controller import DisplayController
 from src.computer_controller.volume_controller import VolumeController
 from src.computer_controller.utils import open_program as op, shut_program, shutdown_computer, reboot_computer
+
 
 browser_controller = BrowserController()
 display_controller = DisplayController()
@@ -41,6 +43,20 @@ def reboot_pc():
 
 def open_program(name: str):
     op(name)
+    os.system("sudo shutdown now")
+
+
+def reboot_pc():
+    os.system("sudo reboot now")
+
+
+def open_program(name: str):
+    name = name.split(" ")
+    try:
+        p = subprocess.Popen(name)
+    except Exception:
+        return
+    return
 
 
 

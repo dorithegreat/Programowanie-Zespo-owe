@@ -1,5 +1,6 @@
 from typing import Callable
 from enum import Enum
+from speech_utils import get_exact_prog_name
 from src.action.speech_action import (
     decrease_brightness, increase_brightness, decrease_volume, increase_volume,
     shutdown_pc, reboot_pc, open_program, search_phrase, close_program
@@ -41,6 +42,7 @@ def commands_to_action(commands: list):
         if command.count(" ") >= 1:
             cmd = SpeechCommands(command.split(" ")[0])
             arg = " ".join(command.split(" ")[1:])
+            arg = get_exact_prog_name(arg)
             _COMMAND_TO_ACTION_MAPPER[cmd](arg)
         else:
             _COMMAND_TO_ACTION_MAPPER[SpeechCommands(command)]()

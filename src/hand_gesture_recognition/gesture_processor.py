@@ -1,15 +1,17 @@
 from enum import Enum
 
-# cannot for the life of me figure out how to properly import this
+
 from src.computer_controller.input_controller import InputController
 
 # I'm not entirely sure we need these at all
 # they were intended for clicking and dragging, and dealing with unreliable gesture recognition
+
 class States(Enum):
     cursor = 1
     left_click = 2
     right_click = 3
     scroll = 4
+
 
 
 class GestureProcessor:
@@ -22,6 +24,7 @@ class GestureProcessor:
 
     def process(self, gesture, positions):
         gesture = gesture.strip()
+
         if gesture == "palm_up":
             self.move_cursor(positions)
         elif gesture == "fist":
@@ -34,10 +37,11 @@ class GestureProcessor:
 
     def move_cursor(self, positions):
         #extract wrist data from landmarks
+
         landmarks = positions.multi_hand_landmarks[0].landmark
         wrist_landmark = landmarks[0]
         
-
+    
         #* I think that mouse movement is actually absolute, not relative
         # x_change = self.prev_postition.x -  wrist_landmark.x
         # y_change = self.prev_position.y - wrist_landmark.y
@@ -77,4 +81,5 @@ class GestureProcessor:
         # y_change = self.prev_position.y - wrist_landmark.y
 
         
+
 
