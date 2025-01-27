@@ -61,9 +61,9 @@ class GestureProcessor:
 
         # self.move_cursor(positions)
         
-        if self.state == States.left_click:
-            # don't click again
-            self.input_controller.click(True)
+
+        # don't click again
+        self.input_controller.click(True)
         
         
         
